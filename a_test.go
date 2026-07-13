@@ -1,9 +1,12 @@
+//go:build integration
+
 package main
 
 import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 	"testing"
@@ -23,6 +26,10 @@ import (
 )
 
 func TestStargate(t *testing.T) {
+	if os.Getenv("RUN_STARGATE_INTEGRATION") != "1" {
+		t.Skip("set RUN_STARGATE_INTEGRATION=1 to run the Cassandra/Stargate integration test")
+	}
+
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		log.Fatalf("Failed to create docker pool: %+v", err)
@@ -214,15 +221,4 @@ func TestStargate(t *testing.T) {
 		}
 		fmt.Println()
 	}
-}
-
-type tailer struct {
-	OnWrite func(string)
-}
-
-func (t *tailer) Write(p []byte) (n int, err error) {
-	if t.OnWrite != nil {
-		t.OnWrite(string(p))
-	}
-	return len(p), nil
 }
