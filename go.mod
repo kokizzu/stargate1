@@ -1,6 +1,6 @@
 module a
 
-go 1.26
+go 1.26.5
 
 require (
 	github.com/gocql/gocql v1.7.0
